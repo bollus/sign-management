@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "spring.datasource.druid.initialSize",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.initialSize."
+    },
+    {
+      "name": "spring.datasource.druid.minIdle",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.minIdle."
+    },
+    {
+      "name": "spring.datasource.druid.maxActive",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.maxActive."
+    },
+    {
+      "name": "spring.datasource.druid.maxWait",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.maxWait."
+    },
+    {
+      "name": "spring.datasource.druid.timeBetweenEvictionRunsMillis",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.timeBetweenEvictionRunsMillis."
+    }
+  ] }

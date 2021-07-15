@@ -1,0 +1,5 @@
+server:
+  port: 6789
+spring:
+  profiles:
+    active: dev
