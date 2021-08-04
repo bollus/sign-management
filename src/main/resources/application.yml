@@ -3,3 +3,5 @@ server:
 spring:
   profiles:
     active: dev
+  aop:
+    proxy-target-class: true #true为使用CGLIB代理

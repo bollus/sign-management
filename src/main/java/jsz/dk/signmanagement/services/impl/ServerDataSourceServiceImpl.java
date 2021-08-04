@@ -1,5 +1,6 @@
 package jsz.dk.signmanagement.services.impl;
 
+import jsz.dk.signmanagement.entity.ServerDataSource;
 import jsz.dk.signmanagement.services.ServerDataSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServerDataSourceServiceImpl implements ServerDataSourceService {
 
-    public void connectDataServerSource(){
+    public void connectDataServerSource(ServerDataSource serverDataSource){
+
 
     }
 }
