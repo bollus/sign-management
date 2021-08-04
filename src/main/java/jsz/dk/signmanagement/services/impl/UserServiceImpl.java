@@ -25,7 +25,6 @@ import top.lrshuai.encryption.MDUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
