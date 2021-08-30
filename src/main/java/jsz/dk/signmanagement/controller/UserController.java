@@ -40,12 +40,27 @@ public class UserController extends BaseController {
         }
     }
 
-    @OperationLogDetail(detail = "用户登陆", level = 3, operationUnit = OperationUnit.GOOGLE, operationType = OperationType.SELECT)
+    @OperationLogDetail(detail = "用户登陆", level = 3, operationUnit = OperationUnit.Redis, operationType = OperationType.SELECT)
     @PostMapping("/login")
     @ResponseBody
     public ResponseParent<UserLoginVO> login(@RequestBody UserDTO dto) {
         try {
             return ResponseParent.succeed("登陆成功", userService.login(dto));
+        } catch (CustomException ce) {
+            return ResponseParent.fail(ResponseCode.CUSTOM_FAILED.getCode(), ce.getMsg());
+        }
+    }
+
+    @OperationLogDetail(detail = "退出登录", level = 3, operationUnit = OperationUnit.Redis, operationType = OperationType.DELETE)
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseParent<UserLoginVO> login() {
+        try {
+            if (userService.logout(this.getUser())){
+                return ResponseParent.succeed("退出成功");
+            }else {
+                return ResponseParent.fail(ResponseCode.INTERNAL_SERVER_ERROR.getCode(), "退出失败");
+            }
         } catch (CustomException ce) {
             return ResponseParent.fail(ResponseCode.CUSTOM_FAILED.getCode(), ce.getMsg());
         }

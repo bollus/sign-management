@@ -1,7 +1,6 @@
 package jsz.dk.signmanagement.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import jsz.dk.signmanagement.entity.ServerDataSource;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +26,7 @@ public class DbSourceUtils {
     /**数据库article**/
     public static final String SQL_2005 = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-    private static String createUrl(String ip, int port, String scheme, LinkedHashMap<String, String> args, String type) {
+    private static String createUrl(String ip, int port, String schema, LinkedHashMap<String, String> args, String type) {
         StringBuilder sb = new StringBuilder();
         switch (type) {
             case "mysql":
@@ -40,17 +39,23 @@ public class DbSourceUtils {
         }
         sb.append(ip);
         sb.append(":");
-        sb.append(port).append("/").append(scheme);
-        System.out.println(sb);
+        sb.append(port).append("/").append(schema);
+        int index = 1;
         for (Map.Entry<String, String> stringStringEntry : args.entrySet()) {
             String key = (stringStringEntry).getKey();
             String val = (stringStringEntry).getValue();
             if (StringUtils.isBlank(val)) {
                 continue;
             }
-            sb.append("&");
+            if (index > 1){
+                sb.append("&");
+            }else {
+                sb.append("?");
+            }
             sb.append(key).append("=").append(val);
+            index++;
         }
+        System.out.println(sb);
         return String.valueOf(sb);
     }
 
@@ -60,7 +65,7 @@ public class DbSourceUtils {
         argsMap = gson.fromJson(dataSource.getArgs(),
                 new TypeToken<LinkedHashMap<String, String>>() {
         }.getType());
-        return createUrl(dataSource.getIp(), dataSource.getPort(), dataSource.getScheme(), argsMap, dataSource.getType());
+        return createUrl(dataSource.getIp(), dataSource.getPort(), dataSource.getSchemaName(), argsMap, dataSource.getType());
     }
 
     public static String createUrlOfMysql(ServerDataSource dataSource) {
@@ -69,7 +74,7 @@ public class DbSourceUtils {
         argsMap = gson.fromJson(dataSource.getArgs(),
                 new TypeToken<LinkedHashMap<String, String>>() {
         }.getType());
-        return createUrl(dataSource.getIp(), dataSource.getPort(), dataSource.getScheme(), argsMap, "mysql");
+        return createUrl(dataSource.getIp(), dataSource.getPort(), dataSource.getSchemaName(), argsMap, "mysql");
     }
 
     public static String createUrlOfMysql(String ip, int port, String scheme, LinkedHashMap<String, String> args) {

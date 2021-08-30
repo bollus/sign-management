@@ -134,6 +134,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean logout(User user) throws CustomException {
+        try {
+            Map<String ,Object> tokens = getData();
+            tokens.forEach((key,value)->{
+                JSONObject jsonObject = (JSONObject) JSON.toJSON(value);
+                if (jsonObject.get("username").equals(user.getUsername())) {
+                    redisUtil.delete(key);
+                }
+            });
+        }catch (Exception e){
+            throw new CustomException(TAG, "清除token失败, (e):"+e.getMessage());
+        }
+        return true;
+    }
+
+    @Override
     public void genQrCode(String secretQrCode, HttpServletResponse response) throws CustomException {
         try {
             response.setContentType("image/png");

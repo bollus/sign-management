@@ -40,7 +40,7 @@ public class ServerDataSourceServiceImpl implements ServerDataSourceService {
         if (dto.getPort()<=0 || dto.getPort()>65535){
             throw new CustomException(TAG, "端口号无效");
         }
-        if (StringUtils.isEmpty(dto.getScheme())){
+        if (StringUtils.isEmpty(dto.getSchemaName())){
             throw new CustomException(TAG, "库名为空");
         }
         if (StringUtils.isEmpty(dto.getUsername())){

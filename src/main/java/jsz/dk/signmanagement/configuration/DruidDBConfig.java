@@ -13,8 +13,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import jsz.dk.signmanagement.interceptor.DynamicDataSource;
 
@@ -134,24 +132,24 @@ public class DruidDBConfig {
         return dynamicDataSource;
     }
 
-    @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dynamicDataSource());
-        //解决手动创建数据源后字段到bean属性名驼峰命名转换失效的问题
-        sqlSessionFactoryBean.setConfiguration(configuration());
-
-        // 设置mybatis的主配置文件
-//        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        // Resource mybatisConfigXml = resolver.getResource("classpath:mybatis/mybatis-config.xml");
-        //  sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
-        // 设置别名包
-        //  sqlSessionFactoryBean.setTypeAliasesPackage("com.testdb.dbsource.pojo");
-
-        //手动配置mybatis的mapper.xml资源路径,如果单纯使用注解方式,不需要配置该行
-        // sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/*.xml"));
-        return sqlSessionFactoryBean.getObject();
-    }
+//    @Bean
+//    public SqlSessionFactory sqlSessionFactory() throws Exception {
+//        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+//        sqlSessionFactoryBean.setDataSource(dynamicDataSource());
+//        //解决手动创建数据源后字段到bean属性名驼峰命名转换失效的问题
+//        sqlSessionFactoryBean.setConfiguration(configuration());
+//
+//        // 设置mybatis的主配置文件
+////        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+//        // Resource mybatisConfigXml = resolver.getResource("classpath:mybatis/mybatis-config.xml");
+//        //  sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
+//        // 设置别名包
+//        //  sqlSessionFactoryBean.setTypeAliasesPackage("com.testdb.dbsource.pojo");
+//
+//        //手动配置mybatis的mapper.xml资源路径,如果单纯使用注解方式,不需要配置该行
+//        // sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/*.xml"));
+//        return sqlSessionFactoryBean.getObject();
+//    }
 
 
     /**

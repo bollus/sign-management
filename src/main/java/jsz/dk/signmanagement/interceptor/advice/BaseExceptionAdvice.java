@@ -69,7 +69,7 @@ public class BaseExceptionAdvice {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseParent<?> handlerHttpMessageNotReadableException(
             HttpMessageNotReadableException e){
-        log.error("丢失请求参数主题:{}" ,e.getMessage());
+        log.error("丢失请求参数主体:{}" ,e.getMessage());
         return ResponseParent.fail(ResponseCode.PARAM_MISS);
     }
 

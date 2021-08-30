@@ -21,7 +21,7 @@ public class ServerDataSource extends SourceEntity {
     private String name;
     private String ip;
     private int port;
-    private String scheme;
+    private String schemaName;
     private String username;
     private String password;
     private String type;

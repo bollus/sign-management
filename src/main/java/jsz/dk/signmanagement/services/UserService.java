@@ -21,6 +21,8 @@ public interface UserService {
 
     UserLoginVO login(UserDTO dto) throws CustomException;
 
+    boolean logout(User user) throws CustomException;
+
     void genQrCode(String secretQrCode, HttpServletResponse response) throws CustomException;
 
     void bindGoogle(GoogleDTO dto, User user, HttpServletRequest request) throws CustomException;
