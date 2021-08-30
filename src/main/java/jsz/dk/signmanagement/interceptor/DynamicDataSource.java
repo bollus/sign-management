@@ -2,8 +2,10 @@ package jsz.dk.signmanagement.interceptor;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.stat.DruidDataSourceStatManager;
+import jsz.dk.signmanagement.common.entity.CustomException;
 import jsz.dk.signmanagement.entity.ServerDataSource;
 import jsz.dk.signmanagement.utils.DBContextHolder;
+import jsz.dk.signmanagement.utils.DbSourceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -25,6 +27,8 @@ import java.util.Set;
 @Slf4j
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
+    private final static String TAG = "[DynamicDataSource]";
+
     private boolean debug = true;
     private Map<Object, Object> dynamicTargetDataSources;
     private Object dynamicDefaultTargetDataSource;
@@ -32,11 +36,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        String datasource = DBContextHolder.getDataSource();
-        if (!StringUtils.isEmpty(datasource)) {
+        long datasourceId = DBContextHolder.getDataSource();
+        if (datasourceId > 0) {
             Map<Object, Object> dynamicTargetDataSources2 = this.dynamicTargetDataSources;
-            if (dynamicTargetDataSources2.containsKey(datasource)) {
-                log.info("---当前数据源：" + datasource + "---");
+            if (dynamicTargetDataSources2.containsKey(datasourceId)) {
+                log.info("---当前数据源：" + datasourceId + "---");
             } else {
                 log.info("不存在的数据源：");
                 return null;
@@ -46,7 +50,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             log.info("---当前数据源：默认数据源---");
         }
 
-        return datasource;
+        return datasourceId;
     }
 
     @Override
@@ -140,7 +144,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     }
 
     // 测试数据源连接是否有效
-    public boolean testDatasource(String key, String driveClass, String url, String username, String password) {
+    public boolean testDatasource(Long key, String driveClass, String url, String username, String password) {
         try {
             Class.forName(driveClass);
             DriverManager.getConnection(url, username, password);
@@ -237,7 +241,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             }
             if(rightFlag) {
                 log.info("不需要重新创建数据源");
-                return;
             } else {
                 log.info("准备重新创建数据源...");
                 createDataSource(dataSource);
@@ -255,26 +258,28 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         String databasetype = dataSource.getType();
         String username = dataSource.getUsername();
         String password = dataSource.getPassword();
-        String url = dataSource.getUrl();
+        String url = DbSourceUtils.createUrl(dataSource);
         String driveClass = "com.mysql.cj.jdbc.Driver";
-//        if("mysql".equalsIgnoreCase(databasetype)) {
-//            driveClass = DBUtil.mysqldriver;
-//        } else if("oracle".equalsIgnoreCase(databasetype)){
-//            driveClass = DBUtil.oracledriver;
-//        }  else if("sqlserver2000".equalsIgnoreCase(databasetype)){
-//            driveClass = DBUtil.sql2000driver;
-//        } else if("sqlserver".equalsIgnoreCase(databasetype)){
-//            driveClass = DBUtil.sql2005driver;
-//        }
+        switch (dataSource.getType()) {
+            case "mysql":
+                driveClass = DbSourceUtils.MYSQL;
+                break;
+            case "oracle":
+                driveClass = DbSourceUtils.ORACLE;
+                break;
+            case "sqlserver":
+                driveClass = DbSourceUtils.SQL_2005;
+                break;
+        }
         if(testDatasource(datasourceId,driveClass,url,username,password)) {
             boolean result = this.createDataSource(datasourceId, driveClass, url, username, password, databasetype);
             if(!result) {
                 log.error("数据源"+datasourceId+"配置正确，但是创建失败");
-//                throw new ADIException("数据源"+datasourceId+"配置正确，但是创建失败",500);
+                throw new CustomException(TAG, "数据源"+datasourceId+"配置正确，但是创建失败",500);
             }
         } else {
             log.error("数据源配置有错误");
-//            throw new ADIException("数据源配置有错误",500);
+            throw new CustomException(TAG,"数据源配置有错误",500);
         }
     }
 }

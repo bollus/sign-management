@@ -14,16 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DBContextHolder {
     // 对当前线程的操作-线程安全的
-    private static final ThreadLocal<String> contextHolder = new ThreadLocal<String>();
+    private static final ThreadLocal<Long> contextHolder = new ThreadLocal<>();
 
     // 调用此方法，切换数据源
-    public static void setDataSource(String dataSource) {
-        contextHolder.set(dataSource);
-        log.info("已切换到数据源:{}",dataSource);
+    public static void setDataSource(long datasourceId) {
+        contextHolder.set(datasourceId);
+        log.info("已切换到数据源:{}",datasourceId);
     }
 
     // 获取数据源
-    public static String getDataSource() {
+    public static long getDataSource() {
         return contextHolder.get();
     }
 

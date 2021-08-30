@@ -14,6 +14,7 @@ public enum OperationUnit {
      */
     UNKNOWN("unknown"),
     USER("user"),
+    SERVER_DATA_SOURCE("serverDatasource"),
     GOOGLE("google"),
     EMPLOYEE("employee"),
     Redis("redis");

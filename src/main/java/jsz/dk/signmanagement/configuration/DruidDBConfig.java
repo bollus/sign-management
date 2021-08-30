@@ -3,17 +3,25 @@ package jsz.dk.signmanagement.configuration;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import jsz.dk.signmanagement.interceptor.DynamicDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ProjectName: sign-management
@@ -38,13 +46,13 @@ public class DruidDBConfig {
     @Value("${spring.datasource.driverClassName}")
     private String driverClassName;
     // 连接池连接信息
-    @Value("${spring.datasource.initialSize}")
+    @Value("${spring.datasource.druid.initialSize}")
     private int initialSize;
-    @Value("${spring.datasource.minIdle}")
+    @Value("${spring.datasource.druid.minIdle}")
     private int minIdle;
-    @Value("${spring.datasource.maxActive}")
+    @Value("${spring.datasource.druid.maxActive}")
     private int maxActive;
-    @Value("${spring.datasource.maxWait}")
+    @Value("${spring.datasource.druid.maxWait}")
     private int maxWait;
 
     @Bean // 声明其为Bean实例
@@ -119,7 +127,7 @@ public class DruidDBConfig {
         //配置缺省的数据源
         // 默认数据源配置 DefaultTargetDataSource
         dynamicDataSource.setDefaultTargetDataSource(dataSource());
-        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
+        Map<Object, Object> targetDataSources = new HashMap<>();
         //额外数据源配置 TargetDataSources
         targetDataSources.put("mainDataSource", dataSource());
         dynamicDataSource.setTargetDataSources(targetDataSources);
@@ -134,7 +142,7 @@ public class DruidDBConfig {
         sqlSessionFactoryBean.setConfiguration(configuration());
 
         // 设置mybatis的主配置文件
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+//        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         // Resource mybatisConfigXml = resolver.getResource("classpath:mybatis/mybatis-config.xml");
         //  sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
         // 设置别名包
@@ -149,7 +157,6 @@ public class DruidDBConfig {
     /**
      * 读取驼峰命名设置
      *
-     * @return
      */
     @Bean
     @ConfigurationProperties(prefix = "mybatis.configuration")

@@ -1,5 +1,8 @@
 package jsz.dk.signmanagement.services;
 
+import jsz.dk.signmanagement.common.entity.CustomException;
+import jsz.dk.signmanagement.entity.ServerDataSourceDTO;
+
 /**
  * @ProjectName: sign-management
  * @Package: jsz.dk.signmanagement.services
@@ -11,4 +14,5 @@ package jsz.dk.signmanagement.services;
  */
 public interface ServerDataSourceService {
 
+    boolean insert(ServerDataSourceDTO dto) throws CustomException;
 }

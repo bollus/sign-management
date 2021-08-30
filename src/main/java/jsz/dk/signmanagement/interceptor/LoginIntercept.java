@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import jsz.dk.signmanagement.common.annotations.NeedLogin;
 import jsz.dk.signmanagement.common.entity.Consts;
+import jsz.dk.signmanagement.common.entity.CustomException;
 import jsz.dk.signmanagement.common.entity.ResponseParent;
 import jsz.dk.signmanagement.entity.User;
 import jsz.dk.signmanagement.enums.CacheEnum;
@@ -34,6 +35,7 @@ import java.lang.reflect.Method;
  */
 @Component
 public class LoginIntercept implements HandlerInterceptor {
+    private final static String TAG = "[LoginIntercept]";
     @Resource
     private RedisUtil redisUtil;
 
@@ -89,9 +91,13 @@ public class LoginIntercept implements HandlerInterceptor {
      * @param cacheEnum
      * @return
      */
-    public boolean isLogin(HttpServletRequest request,CacheEnum cacheEnum){
+    public boolean isLogin(HttpServletRequest request,CacheEnum cacheEnum) throws CustomException {
         String tokenKey = Tools.getTokenKey(request,cacheEnum);
-        return redisUtil.get(tokenKey) != null;
+        try {
+            return redisUtil.get(tokenKey) != null;
+        }catch (Exception e){
+            throw new CustomException(TAG,"redis连接失败：(e)"+e.getMessage());
+        }
     }
 
 

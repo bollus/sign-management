@@ -1,6 +1,7 @@
 package jsz.dk.signmanagement.configuration;
 
 import jsz.dk.signmanagement.interceptor.SqlInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,23 +1,18 @@
 package jsz.dk.signmanagement.entity;
 
-import jsz.dk.signmanagement.common.entity.SourceEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.util.LinkedHashMap;
 
 /**
  * @ProjectName: sign-management
  * @Package: jsz.dk.signmanagement.entity
- * @ClassName: ServerDataSource
+ * @ClassName: ServerDataSourceVO
  * @Author: Strawberry
  * @Description:
- * @Date: 2021/08/04 17:02
+ * @Date: 2021/08/26 17:29
  * @Version: 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class ServerDataSource extends SourceEntity {
+public class ServerDataSourceDTO {
     private String name;
     private String ip;
     private int port;
@@ -25,7 +20,6 @@ public class ServerDataSource extends SourceEntity {
     private String username;
     private String password;
     private String type;
-    private String lastLoginIp;
     private String args;
     private String remark;
 }

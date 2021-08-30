@@ -2,10 +2,12 @@ package jsz.dk.signmanagement.interceptor.advice;
 
 import jsz.dk.signmanagement.common.BaseException;
 import jsz.dk.signmanagement.common.entity.ApiException;
+import jsz.dk.signmanagement.common.entity.CustomException;
 import jsz.dk.signmanagement.common.entity.ResponseParent;
 import jsz.dk.signmanagement.enums.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,10 +41,10 @@ public class BaseExceptionAdvice {
     /**
      * 处理其他所以未知的异常
      */
-    @ExceptionHandler({ApiException.class})
-    public ResponseParent<?> globalExceptionHandler(ApiException e) {
+    @ExceptionHandler({CustomException.class})
+    public ResponseParent<?> globalExceptionHandler(CustomException e) {
         log.error(e.getMessage(), e);
-        return ResponseParent.fail(e.getResponseCode());
+        return ResponseParent.fail(ResponseCode.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -62,6 +64,13 @@ public class BaseExceptionAdvice {
     public ResponseParent<?> handlerNoHandlerFoundException(NoHandlerFoundException e) {
         log.error(e.getMessage(), e);
         return ResponseParent.fail(ResponseCode.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public ResponseParent<?> handlerHttpMessageNotReadableException(
+            HttpMessageNotReadableException e){
+        log.error("丢失请求参数主题:{}" ,e.getMessage());
+        return ResponseParent.fail(ResponseCode.PARAM_MISS);
     }
 
     /**
